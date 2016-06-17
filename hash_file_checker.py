@@ -1,66 +1,46 @@
-# python hash_file_checker.py -i input_file -o output.txt
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-import sys
 import hashlib
 import argparse
 
-def hashfile(filein):
-	"""
-	Creates an md5 and sha1 hash of any file.
-	
-	Useful if you have downloaded some file from a mirror and need to check if 
-	the downloaded file is the same as the file from the original source 
-	by comparing the hash values.
 
-	Assumes that the legitimate publisher of the file has made the hashes 
-	publically available on his website (which we implicitly trust).
-	"""
+def hashfile(input_file):
+    """
+    Creates an MD5, SHA1 and SHA256 hash of any file.
 
-	block_size = 2**20
-	md5 = hashlib.md5()
-	sha1 = hashlib.sha1()
+    This is useful if you have downloaded a file and need to compare the hash
+    values with the values published by the publisher, to ensure that it has
+    not been tampered with.
+    """
 
-	try:
-		with open(filein, 'rb') as f:
-			while True:
-				data = f.read(block_size)
-				if not data:
-					break
-				md5.update(data)
-				sha1.update(data)
-  
-	except IOError:
-		print 'PLease check that the input file is valid'
+    block_size = 2**20
+    md5 = hashlib.md5()
+    sha1 = hashlib.sha1()
+    sha256 = hashlib.sha256()
 
-	md5_digest = md5.hexdigest().upper()
-	sha1_digest = sha1.hexdigest().upper()
+    try:
+        with open(input_file, 'rb') as f:
+            while True:
+                data = f.read(block_size)
+                if not data:
+                    break
+                md5.update(data)
+                sha1.update(data)
+                sha256.update(data)
 
-	return md5_digest, sha1_digest
+    except IOError:
+        print 'PLease check that the input file is valid'
 
-if __name__=="__main__":
+    return md5.hexdigest(), sha1.hexdigest(), sha256.hexdigest()
+
+
+if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', dest = 'filein', help = 'mandatory input file')
-    parser.add_argument('-o', dest = 'fileout', help = 'optional output file')
+    parser.add_argument(dest='input_file', help='mandatory input file')
+    md5_digest, sha1_digest, sha256_digest = hashfile(
+        parser.parse_args().input_file)
 
-    args = parser.parse_args()
-    if args.filein == None:
-    	sys.exit("Please specify the full input file name with -i [input_file]")
-
-    filein = args.filein
-    fileout = args.fileout
-
-    print "Hashing in progress"
-
-    md5_digest, sha1_digest = hashfile(filein)
-
-    print 'MD5:\t' + md5_digest
-    print 'SHA1:\t' + sha1_digest
-
-    if args.fileout != None:
-    	try:
-    		with open(fileout, 'w') as outfile:
-        		outfile.write('MD5:\t' + md5_digest + '\n')
-        		outfile.write('SHA1:\t' + sha1_digest)
-        	print 'Hash values written to ' + fileout
-        except IOError:
-        	print 'Please check that the output file is valid'
+    print 'MD5:\t' + md5_digest.upper()
+    print 'SHA1:\t' + sha1_digest.upper()
+    print 'SHA256:\t' + sha256_digest.upper()
