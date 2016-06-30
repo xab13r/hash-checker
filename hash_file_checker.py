@@ -67,29 +67,29 @@ if __name__ == '__main__':
             target = target.upper()
 
             if (target == sha1_digest):
-                print('\nFile:\t%s' % filein)
+                print('\nFile: %s' % filein)
                 print('SHA1 Hash matched:')
                 print(sha1_digest)
                 print(target)
-                print('The file looks authentic.\n')
+                print('\nThe file looks authentic.\n')
 
             elif (target == md5_digest):
-                print('\nFile:\t%s' % filein)
+                print('\nFile: %s' % filein)
                 print('MD5 Hash matched:')
                 print(md5_digest)
                 print(target)
-                print('The file looks authentic.\n')
+                print('\nThe file looks authentic.\n')
 
             elif (target == sha256_digest):
-                print('\nFile:\t%s' % filein)
+                print('\nFile: %s' % filein)
                 print('SHA256 Hash matched:')
                 print(sha256_digest)
                 print(target)
-                print('The file looks authentic.\n')
+                print('\nThe file looks authentic.\n')
 
             else:
                 print('\nFile:\t%s' % filein)
-                print('WARNING: Try to redownload the file.\n')
+                print('\nWARNING: Try to redownload the file.\n')
 
         except IOError:
             print('Please check the hash you provided\n')
